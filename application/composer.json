@@ -1,0 +1,17 @@
+{
+    "name": "tai/swagger-api",
+    "description": "https://www.freelancer.com/projects/php/Create-Swagger-RESTful-API-Documentation/details",
+    "type": "project",
+    "require-dev": {
+        "php": "^7.2"
+    },
+    "authors": [
+        {
+            "name": "TaiJinYuan",
+            "email": "alerk.star@gmail.com"
+        }
+    ],
+    "require": {
+        "firebase/php-jwt": "^5.0"
+    }
+}
