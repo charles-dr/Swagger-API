@@ -1,4 +1,4 @@
-#Swagger API
+# Swagger API
 ## Characteristics
 - JWT (JSON Web Token)
 - Authentication
