@@ -16,4 +16,11 @@ class Auth_model extends MY_Model {
             ->get()->row();
     }
 
+    public function checkClientWithEmail($email) {
+        return $this->db->from('client')
+            ->where('email', $email)
+            ->limit(1)
+            ->get()->row();
+    }
+
 }

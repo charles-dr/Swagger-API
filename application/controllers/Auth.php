@@ -31,21 +31,25 @@ class Auth extends MY_Controller
     public function generateToken() {
         $header_type = $this->general->getAuthHeaderType();
         if ($header_type == 'Basic') {
-            $key = "example_key";
+            $credentials = $this->general->getBasicAuthHeader();
+            $client = $this->AUTH->checkCredential($credentials[0], $credentials[1]);
+
+            $key = JWT_PRIVATE_KEY;
+
 
             // claims:  iss (issuer), exp (expiration time), sub (subject), aud (audience), and others.
             $token = [
-                'iss'   => 'http://exmaple.org',    // issuer
-                'aud'   => 'http:/example.com',     // audience
-                'iat'   => 1356999524,              // issued at time
-                'nbf'   => 1357000000               // not before time
+                'iss'   => JWT_ISSUER,              // issuer
+                'aud'   => $client->email,          // audience
+                'iat'   => time(),                  // issued at time
+                'exp'   => time() + JWT_EXPIRATION * 60  // not before time
             ];
             $jwt = JWT::encode($token, $key);
-            $decoded = JWT::decode($jwt, $key, array('HS256'));
+
             $response = [
-                'status'    => true,
-                'token'     => $jwt,
-                'decoded'   => $decoded
+                'status'        => true,
+                'expiration'    => JWT_EXPIRATION * 60,
+                'token'         => $jwt
             ];
             $this->_returnJson($response, 200);
         }

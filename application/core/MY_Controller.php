@@ -8,6 +8,7 @@ header("Access-Control-Allow-Origin: *");
 //header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
+use \Firebase\JWT\JWT;
 
 class MY_Controller extends CI_Controller {
 
@@ -69,7 +70,64 @@ class MY_Controller extends CI_Controller {
             }
         }
         else if ($auth_header_type == 'Bearer') {
-            echo 'token';
+            $token = $this->general->getBearerAuthToken();
+            $key = JWT_PRIVATE_KEY;
+            try {
+                $decoded = JWT::decode($token, $key, array('HS256'));
+            } catch (Exception $e) {
+                $response = [
+                    'status'    => false,
+                    'message'   => $e->getMessage()
+                ];
+                $this->_returnJson($response, 400);
+            }
+
+            // check token data has proper fields
+            if (!$this->general->checkTokenFields($decoded)) {
+                $response = [
+                    'status'    => false,
+                    'message'   => 'Invalid Token Format'
+                ];
+                $this->_returnJson($response, 400);
+            }
+            // check time expiration
+            else if ($decoded->exp < time()){
+                $response = [
+                    'status'    => false,
+                    'message'   => 'Token has been expired'
+                ];
+                $this->_returnJson($response, 400);
+            }
+            // check more others
+            else {
+                $client = $this->AUTH->checkClientWithEmail($decoded->aud);
+                // can't find the client with api key
+                if (!$client) {
+                    $response = [
+                        'status'    => false,
+                        'message'   => 'No User Found with credentials'
+                    ];
+                    $this->_returnJson($response, 400);
+                }
+                // api key (client) exists, but not activated.
+                else if ($client && $client->status == 'PENDING') {
+                    $response = [
+                        'status'    => false,
+                        'message'   => 'You application is not active now...'
+                    ];
+                    $this->_returnJson($response, 401);
+                } else {
+                    // now possible to go further.
+
+                }
+            }
+        }
+        else {
+            $response = [
+                'status'    => false,
+                'message'   => 'Authentication Error!'
+            ];
+            $this->_returnJson($response, 401);
         }
     }
 

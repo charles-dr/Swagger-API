@@ -1,0 +1,512 @@
+swagger: "2.0"
+
+info:
+  version: "1.0.0"
+  title: "Traineerecords"
+  description: "description goes here"
+
+host:   "https://traineerecords.com"
+
+basePath: "/api"
+
+schemes:
+- "https"
+
+consumes:
+  - application/json
+produces:
+  - application/json
+
+securityDefinitions:
+  Basic:
+    type: basic
+    name: Authorization
+    in: header
+    description: "Request must have the header 'Authorization: Basic {API_KEY}:{API_SECRET}'"
+  Bearer:
+    type: apiKey
+    name: Authorization
+    in: header
+    description: "Request must have the header 'Authorization: Bearer {token}'"
+
+paths:
+
+  /get-token:
+
+    get:
+      tags:
+        - authentication
+      summary: Authenticates the client with API KEY and API SECRET and returns JWT token
+      security:
+        - Basic: {API_KEY}:{API_SECRET}
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: object
+            rquired:
+              - expiration
+              - token
+            properties:
+              status:
+                type: boolean
+              expiration:
+                type: number
+                description: expiration time in units of second
+              token:
+                type: string
+                description: JWT token
+        401:
+          description: Anthentication Error
+          schema:
+            type: object
+            rquired:
+              - message
+            properties:
+              status:
+                type: boolean
+              message:
+                type: string
+
+  /employee:
+
+    get:
+      tags:
+        - employee
+      summary: get all employees
+      security:
+        Bearer: []
+      responses:
+        200:
+          description: successfull operation
+          schema:
+            type: object
+            required:
+              - data
+            properties:
+              status:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: array
+                items:
+                  $ref: "#definition/Employees"
+        400:
+          description: token expired
+          schema:
+            type: object
+            properties:
+              status:
+                type: boolean
+              message:
+                type: string
+
+    put:
+      tags:
+        - employee
+      summary: creates a new employee
+      security:
+        Bearer: []
+      paramerters:
+        - $ref: "#parameters/newEmployeeInBody"
+      response:
+        201:
+          description: successfull operation
+          schema:
+            type: object
+            required:
+              - message
+              - data
+            properties:
+              status:
+                type: boolean
+              message:
+                type: string
+              data:
+                $ref: "#definition/Employee"
+        400:
+          description: error response
+          schema:
+            type: object
+            required:
+              - status
+              - message
+            properties:
+              status:
+                type: boolean
+              message:
+                type: string
+                descriptin: shows the error content
+
+  /employee/{id}:
+
+    get:
+      tags:
+        - employee
+      summary: get an employee details
+      security:
+        Bearer: []
+      parameters:
+        - $ref: "#parameters/id"
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: object
+            required:
+              - data
+            properties:
+              status:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                $ref: "#definition/Employee"
+        40x:
+          descripton: error
+          schema:
+            $ref: "#definition/Error"
+
+    patch:
+      tags:
+        - employee
+        - update
+      summary: update an employee
+      security:
+        Bearer: []
+      parameters:
+        - $ref: "#parameters/id"
+        - $ref: "#paramertes/updateEmployeeInBody"
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: object
+            required: data
+            properties:
+              status:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                schema:
+                  $ref: "#definition/Employee"
+        40x:
+          schema:
+            $ref: "#definition/Error"
+
+    delete:
+      tags:
+        - employee
+        - delete
+      summary: delete an employee
+      security:
+        Bearer: []
+      parameters:
+        - $ref: "#parameters/id"
+      responses:
+        200:
+          description: successfull operation
+          schema:
+            type: object
+            properties:
+              status:
+                type: boolean
+              message:
+                type: string
+        40x:
+          description: error while operation
+          schema:
+            type: object
+            properties:
+              status:
+                type: boolean
+              message:
+                type: string
+
+  /employee/{id}/course:
+
+    get:
+      tags:
+        - employee
+        - course
+        - list
+      summary: get all course of the employee
+      security:
+        Bearer: []
+      parameters:
+        - $ref: "#definition/id"
+      responses:
+        200:
+          description: successfull operation
+          schema:
+            type: object
+            required:
+              - data
+            properties:
+              status:
+                type: boolean
+              message:
+                type: string
+              data:
+                $ref: "#definition/Courses"
+        40x:
+          description: error while opertiona
+          schema:
+            type: object
+            properties:
+              status:
+                type: boolean
+              message:
+                type: string
+
+    put:
+      tags:
+        - employee
+        - course
+        - create
+      summary: add new course to the employee
+      security:
+        Bearer: []
+      parameters:
+        - $ref: "#parameters/id"
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: object
+            required: data
+            properties:
+              status:
+                type: boolean
+              message:
+                type: string
+              data:
+                schema:
+                  $ref: "#definition/Course"
+        40x:
+          description: error while operation
+          schema:
+            $ref: "#definition/Error"
+
+
+  /employee/{id}/course/{courseId}:
+
+    get:
+      tags:
+        - employee
+        - course
+        - list
+      summary: get a course of the employee
+      security:
+        Bearer: []
+      parameters:
+        - $ref: "#parameters/id"
+        - $ref: "#parameters/courseId"
+      resoponses:
+        200:
+          description: successful operation
+          schema:
+            type: object
+            required:
+              - data
+            propertis:
+              status:
+                type: boolean
+              message:
+                type: string
+              data:
+                $ref: "#definition/Course"
+        40x:
+          description: error while operatio
+          schema:
+            $ref: "#definition/Error"
+
+    patch:
+      tags:
+        - employee
+        - course
+        - update
+      summary: update a course of the employee
+      security:
+        Bearer: []
+      parameters:
+        - $ref: "#parameters/id"
+        - $ref: "#parameters/courseId"
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: object
+            rquired:
+              - data
+            properties:
+              status:
+                type: boolean
+              message:
+                type: string
+              data:
+                $ref: "#definition/Course"
+        40x:
+          description: error while operation
+          schema:
+            $ref: "#definition/Error"
+
+    delete:
+      tags:
+        - employee
+        - course
+        - delete
+      summary: delete a course from the employee
+      security:
+        Bearer: []
+      parameters:
+        - $ref: "#parameters/id"
+        - $ref: "#parameters/courseId"
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: object
+            required:
+              - data
+            properties:
+              status:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: array
+                items:
+                  $ref: "#definition/Course"
+                description: remaining courses of the employee
+        40x:
+          description: error while operation
+          schema:
+            $ref: "#definition/Error"
+
+
+parameters:
+
+  newEmployeeInBody:
+    name: newEmployeeInBody
+    in: query
+    description: A json representing the employee
+    required: true
+    schema:
+      $ref: "#definition/Employee"
+
+  updateEmployeeInBody:
+    name: updateEmployeeInBody
+    in: query
+    description: A json representing the employee
+    required:
+      - employee_id
+    schema:
+      $ref: "#definition/Employee"
+
+  id:
+    name: id
+    in: path
+    description: pkemployee of employee object
+    required: true
+    type: number
+
+  courseId:
+    name: courseId
+    in: path
+    description: course_id of course object
+    required: true
+    type: number
+
+definitions:
+
+  Employees:
+    type: array
+    items:
+      $ref: "#definitions/Employee"
+  Employee:
+    type: object
+    required:
+      - employee_id
+      - email
+    properties:
+      active:
+        type: string, 'Checked' or 'Unchecked'
+        description: shows if employee is active or not.
+      email:
+        type: string
+        required: true
+        description: unique email for each employee
+      employee_id:
+        type: string
+        required: true
+        description: 6 digits unique string for each employee
+      first_name:
+        type: string
+        description: first name of the employee
+      last_name:
+        type: string
+        description: last name of the employee
+      location_id:
+        type: number
+        description: location id
+      password:
+        type: string
+        description: employee password
+      role:
+        type: JSON string
+        description: role of employee. Submitted as object or array when creates or updates , but saved and read as JSON string
+      train_manager:
+        type: string
+        description: email of train manager
+      escalation_manager:
+        type: string
+        description: email of the escalation manager
+  Courses:
+    type: array
+    items:
+      $ref: "#definition/Course"
+  Course:
+    type: object
+    required:
+      - course_name
+      - date_activity
+      - due_date
+    properties:
+      course_name:
+        type: string
+        description: name of the course
+      date_activity:
+        type: string, 'YYYY-mm-dd[ HH:ii::ss]'
+        description: activity date
+      due_date:
+        type: string, 'YYYY-mm-dd[ HH:ii:ss]'
+        description: expiration date
+  Response:
+    type: object
+    required:
+      - status
+      - message
+    properties:
+      status:
+        type: boolean
+      message:
+        type: string
+      data:
+        type: object or array
+  Error:
+    type: object
+    required:
+      - status
+      - message
+    properties:
+      message:
+        type: string
+      status:
+        type: boolean
+      data:
+        type: object or array

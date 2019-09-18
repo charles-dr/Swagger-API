@@ -103,5 +103,6 @@ defined('PATTERN_API_SECRET') OR define('PATTERN_API_SECRET', '/^([a-z0-9]{8}-){
 
 
 ///////// JWT(JSON WEB TOKEN)
-defined('JWT_EXPIRATION') OR define('JWT_EXPIRATION', 3600);        // time in seconds
-defined('JWT_ISSUER') OR define('JWT_ISSUER', 'http://traineerecords.com/oms');     // issue or company
+defined('JWT_EXPIRATION') OR define('JWT_EXPIRATION', 60);                    // time in minutes
+defined('JWT_ISSUER') OR define('JWT_ISSUER', 'http://traineerecords.com/oms'); // issue or company
+defined('JWT_PRIVATE_KEY') OR define('JWT_PRIVATE_KEY', 'http://traineerecords.com/oms-tai');  // private key for encryption/decryption

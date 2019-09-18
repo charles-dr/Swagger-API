@@ -11,41 +11,6 @@ class MY_Model extends CI_Model {
     public $db_main;
     public function __construct() {
         parent::__construct();
-		//$this->db_main = $this->load->database('sqlite', TRUE);
-		//var_dump($this->db_main);exit;
-    }
-
-    /**
-     * @function: getUserAvatar
-     * @params: user_id
-     */
-    public function getUserAvatar($user_id){
-        $isLocal = stripos(HTTP_PATH, 'localhost');
-        $prefix = $isLocal ? HTTP_PATH . '../' : 'https://www.kpabal.com/';
-        $user = $this->db_main->where('memberIdx', $user_id)->get('member')->row();
-
-        if ($user){
-            return $prefix . PROJECT_UP_DIR . 'avatar/' . (!empty($user->avatar) ? $user->avatar : 'default.jpg');
-        }else{
-            return $prefix . PROJECT_UP_DIR . 'avatar/default.jpg';
-        }
-    }
-
-     /**
-     * @function: user_logged_in
-     * @comment: check if user is logged in
-     * @return: false(not logged in), user object(logged in)
-    */
-    public function user_logged_in() {
-        if ($this->session->userdata(SESSION_DOMAIN . USER_LOGIN_SESSION) && $this->session->userdata(SESSION_DOMAIN . USER_LOGIN_SESSION . 'username')) {
-            $user_idx = $this->session->userdata(SESSION_DOMAIN . USER_LOGIN_SESSION); //return $user_idx;
-            $user_id = $this->session->userdata(SESSION_DOMAIN . USER_LOGIN_SESSION . 'username'); //echo $user_id;
-        }else {
-            return FALSE;
-        }
-
-        $user = $this->getRowData('member', ['user_id'=> $user_id], false); //var_dump($user);
-        return $user ? $user : false;
     }
 
     /**

@@ -67,8 +67,20 @@ $route['get-token']['get']                     = 'auth/generateToken';
  * -------------------
  */
 $route['employee']['get']                      = 'employee/getEmployeeList';
-$route['employee/:any']['get']                 = 'employee/getEmployee/$1';
+$route['employee/(:any)']['get']               = 'employee/getEmployee/$1';
 $route['employee']['put']                      = 'employee/insertEmployee';
-$route['employee']['patch']                    = 'employee/updateEmployee';
-$route['employee']['DELETE']                   = 'employee/deleteEmployee';
+$route['employee/(:any)']['patch']             = 'employee/updateEmployee/$1';
+$route['employee/(:any)']['DELETE']            = 'employee/deleteEmployee/$1';
+
+/*
+ * -------------------
+ *    C O U R S E    |
+ * -------------------
+ */
+
+$route['employee/(:any)/course']['put']             = 'course/addCourse/$1';
+$route['employee/(:any)/course']['get']             = 'course/getCourseList/$1';
+$route['employee/(:any)/course/(:any)']['get']      = 'course/getCourse/$1/$2';
+$route['employee/(:any)/course/(:any)']['patch']    = 'course/updateCourse/$1/$2';
+$route['employee/(:any)/course/(:any)']['delete']   = 'course/deleteCourse/$1/$2';
 

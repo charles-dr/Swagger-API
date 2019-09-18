@@ -34,6 +34,31 @@ class General
         return $credential_arr;
     }
 
+    public function getBearerAuthToken() {
+        $header_encoded = $this->CI->input->get_request_header('Authorization', FALSE);
+        $header_arr = explode(' ', $header_encoded);
+        return $header_arr[1];
+    }
+
+    /**
+     * @name checkTokenFields
+     * @description check decoded token has proper fields
+     * @return boolean
+    */
+    public function checkTokenFields($tokenData) {
+        if (
+            isset($tokenData->iss) &&
+            isset($tokenData->aud) &&
+            isset($tokenData->iat) &&
+            isset($tokenData->exp)
+        ) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
     public function generateKey($length = 30, $split_length = 6) {
         return implode('-', str_split(substr(strtolower(md5(microtime().rand(1000, 9999))), 0, $length), $split_length));
     }
@@ -44,6 +69,10 @@ class General
 
     public function checkApiSecretValid($apiSecret) {
         return preg_match(PATTERN_API_SECRET, $apiSecret);
+    }
+
+    public function encryptPassword($password) {
+        return md5($password);
     }
 }
 
