@@ -63,7 +63,7 @@ Generate new token using basic Auth header which needs the API_KEY and API_SECRE
         
         active(string, optional) - active status of the employee. one of two values - 'Chekced', 'Unchecked'
         
-        role(mixed, optional) - role data of the employee which will be saved in forms of JSON string
+        role(mixed, optional) - role data of the employee which will be saved in forfms of JSON string
         
         train_manager(string, required) - email of the train manager
         
@@ -154,7 +154,7 @@ Generate new token using basic Auth header which needs the API_KEY and API_SECRE
                     "last_name": "Jones",
                     "employee_id": "202010",
                     "location_id": "27",
-                    "email": "al.erk.star@gmail.com",
+                    "email": "some.email@gmail.com",
                     "password": "123456",
                     "active": "Checked",
                     "activated_at": null,
@@ -177,11 +177,11 @@ Generate new token using basic Auth header which needs the API_KEY and API_SECRE
                 },
                 {
                     "pkemployee": "2",
-                    "first_name": "Tai",
-                    "last_name": "Jin",
+                    "first_name": "Austin",
+                    "last_name": "Oh",
                     "employee_id": "202015",
                     "location_id": "27",
-                    "email": "alerk.star@gmail.com",
+                    "email": "member@gmail.com",
                     "password": "234234",
                     "active": "Unchecked",
                     "activated_at": null,
@@ -231,8 +231,8 @@ You may get the details of employee for given pkemployee field.
                     "last_name": "Jones",
                     "employee_id": "202010",
                     "location_id": "27",
-                    "email": "al.erk.star@gmail.com",
-                    "password": "123456",
+                    "email": "member1@gmail.com",
+                    "password": "###",
                     "active": "Checked",
                     "activated_at": null,
                     "train_manager": "blackrock@example.com",
